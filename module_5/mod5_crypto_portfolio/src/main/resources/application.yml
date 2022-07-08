@@ -1,0 +1,43 @@
+server:
+  port: 8080
+#  ssl:
+#    key-store-password: password
+#    key-store: classpath:keystore.p12
+#    key-store-type: PKCS12
+#    key-alias: tomcat
+
+kc:
+  base-url: https://keycloak.emax-it.com/auth
+  realm: spring-security-training
+  realm-url: ${kc.base-url}/realms/${kc.realm}
+
+spring:
+  main:
+    allow-bean-definition-overriding: true
+  security:
+    oauth2:
+      client:
+        registration:
+          keycloak:
+            client-id: spring-security-training-client
+            client-name: Spring security training client
+            client-secret: P1GuyrCj8QL5yiLiKww7qp8OEl5Khm4A
+            provider: keycloak
+            authorization-grant-type: authorization_code
+            scope: openid, profile
+            redirectUri: "{baseUrl}/login/oauth2/code/{registrationId}"
+            #redirect-uri: http://localhost:8080/login/oauth2/code/spring-security-training-client
+        provider:
+          keycloak:
+            authorization-uri: ${kc.realm-url}/protocol/openid-connect/auth
+            jwk-set-uri: ${kc.realm-url}/protocol/openid-connect/certs
+            token-uri: ${kc.realm-url}/protocol/openid-connect/token
+            user-name-attribute: preferred_username
+            #issuer-uri: http://localhost:8081/auth/realms/CryptoPortfolio
+
+logging:
+  level:
+    root: INFO
+    com.memorynotfound: INFO
+    org.springframework.web: INFO
+    org.springframework.security: INFO
